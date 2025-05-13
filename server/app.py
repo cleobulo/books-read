@@ -5,6 +5,8 @@ from datetime import datetime
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from typing_extensions import Annotated, List
 
+# Server
+
 app = FastAPI()
 
 origins = ['*']
@@ -17,12 +19,7 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-class Book(BaseModel):
-    title: str
-    author: str
-    description: str = None
-    impressions: str
-    created_date: datetime
+# Models
 
 class BookModel(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
