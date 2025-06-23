@@ -25,8 +25,7 @@ class BookModel(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     title: str = Field(index=True)
     author: str = Field(index=True)
-    description: str = Field(default='', index=True)
-    impressions: str = Field(default='', index=True)
+    comment: str = Field(default='', index=True)
     created_date: datetime = Field(default=datetime.now(), index=True)
 
 # Database configurations
