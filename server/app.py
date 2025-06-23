@@ -1,6 +1,6 @@
 from fastapi import FastAPI, status, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import Response
 from datetime import datetime
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from typing_extensions import Annotated, List
@@ -26,7 +26,7 @@ class BookModel(SQLModel, table=True):
     title: str = Field(index=True)
     author: str = Field(index=True)
     description: str = Field(default='', index=True)
-    impressions: str = Field(index=True)
+    impressions: str = Field(default='', index=True)
     created_date: datetime = Field(default=datetime.now(), index=True)
 
 # Database configurations
@@ -49,9 +49,13 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 # End Database Configurations
 
+# Initialization
+
 @app.on_event('startup')
 async def startup_event():
     create_db_and_tables()
+
+# Endpoints
 
 @app.get('/')
 async def root():
@@ -73,10 +77,23 @@ def read_all_books(
     books = session.exec(select(BookModel).offset(offset).limit(limit)).all()
     return books
 
-@app.get('/books/{bookd_id}', status_code=status.HTTP_200_OK)
+@app.get('/books/{book_id}', status_code=status.HTTP_200_OK)
 def read_one_book(book_id: int, session: SessionDep) -> BookModel:
     book = session.get(BookModel, book_id)
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Book not found')
     
     return book
+
+@app.delete('/books/{book_id}', status_code=status.HTTP_204_NO_CONTENT)
+def remove_one_book(book_id: int, session: SessionDep):
+    book = session.get(BookModel, book_id)
+
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Book not found.')
+    
+    session.delete(book)
+    session.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
