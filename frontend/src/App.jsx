@@ -11,7 +11,7 @@ function HomePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
+  const fetchBooks = () => {
     fetch(`${API_BASE_URL}/books`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch books')
@@ -25,7 +25,15 @@ function HomePage() {
         setError(err.message)
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    fetchBooks()
   }, [])
+
+  const handleDelete = (id) => {
+    setBooks((prev) => prev.filter((book) => book.id !== id))
+  }
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error}</p>
@@ -33,7 +41,7 @@ function HomePage() {
   return (
     <div>
       <h1>Read Books</h1>
-      <BooksTable books={books} />
+      <BooksTable books={books} onDelete={handleDelete} />
     </div>
   )
 }
