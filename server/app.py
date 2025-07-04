@@ -23,7 +23,7 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-app.mount('/static', StaticFiles(directory='static'), name='static')
+app.mount('/assets', StaticFiles(directory='dist/assets'), name='assets')
 
 # Models
 
@@ -62,15 +62,6 @@ async def startup_event():
 
 # Endpoints
 
-@app.get('/{full_path:path}', response_class=FileResponse)
-async def serve_react_app(full_path: str):
-    file_path = os.path.join('static', full_path)
-
-    if not os.path.exists(file_path): 
-        return FileResponse(os.path.join('static', 'index.html'))
-    
-    return FileResponse(file_path)
-
 @app.post('/api/book', status_code=status.HTTP_201_CREATED)
 async def create_book(book: BookModel, session: SessionDep):
     session.add(book)
@@ -107,3 +98,11 @@ def remove_one_book(book_id: int, session: SessionDep):
     session.delete(book)
     session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@app.get('/', response_class=FileResponse)
+async def serve_root():
+    return FileResponse("dist/index.html")
+
+@app.get('/{full_path:path}', response_class=FileResponse)
+async def serve_spa(full_path: str):
+    return FileResponse("dist/index.html")
