@@ -1,9 +1,13 @@
 from fastapi import FastAPI, status, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from typing_extensions import Annotated, List
+
+import os
 
 # Server
 
@@ -18,6 +22,8 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+
+app.mount('/static', StaticFiles(directory='static'), name='static')
 
 # Models
 
@@ -56,18 +62,23 @@ async def startup_event():
 
 # Endpoints
 
-@app.get('/')
-async def root():
-    return {'text': 'Hello, world!'}
+@app.get('/{full_path:path}', response_class=FileResponse)
+async def serve_react_app(full_path: str):
+    file_path = os.path.join('static', full_path)
 
-@app.post('/book', status_code=status.HTTP_201_CREATED)
+    if not os.path.exists(file_path): 
+        return FileResponse(os.path.join('static', 'index.html'))
+    
+    return FileResponse(file_path)
+
+@app.post('/api/book', status_code=status.HTTP_201_CREATED)
 async def create_book(book: BookModel, session: SessionDep):
     session.add(book)
     session.commit()
     session.refresh(book)
     return book.model_dump(exclude_none=True)
 
-@app.get('/books', status_code=status.HTTP_200_OK)
+@app.get('/api/books', status_code=status.HTTP_200_OK)
 def read_all_books(
     session: SessionDep,
     offset: int = 0,
@@ -76,7 +87,7 @@ def read_all_books(
     books = session.exec(select(BookModel).offset(offset).limit(limit)).all()
     return books
 
-@app.get('/books/{book_id}', status_code=status.HTTP_200_OK)
+@app.get('/api/books/{book_id}', status_code=status.HTTP_200_OK)
 def read_one_book(book_id: int, session: SessionDep) -> BookModel:
     book = session.get(BookModel, book_id)
     if not book:
@@ -84,7 +95,7 @@ def read_one_book(book_id: int, session: SessionDep) -> BookModel:
     
     return book
 
-@app.delete('/books/{book_id}', status_code=status.HTTP_204_NO_CONTENT)
+@app.delete('/api/books/{book_id}', status_code=status.HTTP_204_NO_CONTENT)
 def remove_one_book(book_id: int, session: SessionDep):
     book = session.get(BookModel, book_id)
 
