@@ -8,7 +8,7 @@ function NavBar() {
         <span className="navbar-logo">Books Read</span>
         <ul className="navbar-links">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/novo">New Book</Link></li>
+          <li><Link to="/new">New Book</Link></li>
         </ul>
       </div>
     </nav>
