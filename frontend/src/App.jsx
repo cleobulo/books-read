@@ -48,11 +48,11 @@ function HomePage() {
 
 function App() {
   return (
-    <Router>
+    <Router basename="/">
       <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/novo" element={<BookForm />} />
+        <Route path="/new" element={<BookForm />} />
       </Routes>
     </Router>
   )
