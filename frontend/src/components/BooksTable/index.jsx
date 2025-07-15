@@ -39,7 +39,9 @@ export default function BooksTable({ books, onDelete }) {
                     <tr key={book.id}>
                         <td style={{ border: '1px solid #ccc', padding: '8px' }}>{book.title}</td>
                         <td style={{ border: '1px solid #ccc', padding: '8px' }}>{book.author}</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{book.comment}</td>
+                        <td style={{ border: '1px solid #ccc', padding: '8px', maxWidth: '200px', maxHeight: '60px', wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'pre-line', display: 'block' }}>
+                            {book.comment}
+                        </td>
                         <td style={{ border: '1px solid #ccc', padding: '8px' }}>
                             {new Date(book.created_date).toLocaleString('pt-BR')}
                         </td>
