@@ -37,15 +37,13 @@ export default function BooksTable({ books, onDelete }) {
             <tbody>
                 {books.map((book) => (
                     <tr key={book.id}>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{book.title}</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{book.author}</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px', maxWidth: '200px', maxHeight: '60px', wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'pre-line', display: 'block' }}>
-                            {book.comment}
-                        </td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                        <td style={{ border: '1px solid #ccc', padding: '8px', width: '160px', maxWidth: '160px', minWidth: '160px', height: '40px', maxHeight: '60px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{book.title}</td>
+                        <td style={{ border: '1px solid #ccc', padding: '8px', width: '140px', maxWidth: '140px', minWidth: '140px', height: '40px', maxHeight: '60px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{book.author}</td>
+                        <td style={{ border: '1px solid #ccc', padding: '8px', width: '200px', maxWidth: '200px', minWidth: '200px', height: '40px', maxHeight: '60px', overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-word', whiteSpace: 'pre-line', display: 'block' }}>{book.comment}</td>
+                        <td style={{ border: '1px solid #ccc', padding: '8px', width: '140px', maxWidth: '140px', minWidth: '140px', height: '40px', maxHeight: '60px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {new Date(book.created_date).toLocaleString('pt-BR')}
                         </td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center' }}>
+                        <td style={{ border: '1px solid #ccc', padding: '8px', width: '100px', maxWidth: '100px', minWidth: '100px', height: '40px', maxHeight: '60px', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             <DeleteButton
                                 onClick={() => handleDelete(book.id)} 
                                 disabled={deletingId === book.id} />
