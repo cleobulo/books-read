@@ -5,7 +5,6 @@ import './BookForm.css'
 function BookForm() {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [comment, setComment] = useState('')
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -19,13 +18,12 @@ function BookForm() {
       const res = await fetch(`${API_BASE_URL}/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, author, comment })
+        body: JSON.stringify({ title, author })
       })
       if (!res.ok) throw new Error('Failed to create book')
       setSuccess(true)
       setTitle('')
       setAuthor('')
-      setComment('')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -44,10 +42,6 @@ function BookForm() {
         <label>
           Author:
           <input value={author} onChange={e => setAuthor(e.target.value)} required />
-        </label>
-        <label>
-          Comment:
-          <textarea value={comment} onChange={e => setComment(e.target.value)} />
         </label>
         <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
       </form>
