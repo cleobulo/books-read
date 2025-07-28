@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import BooksTable from './components/BooksTable'
 import BookForm from './components/BookForm'
+import BooksList from './components/BooksList'
 import { API_BASE_URL } from './apiConfig'
 import { useEffect, useState } from 'react'
 import './App.css'
@@ -41,7 +42,7 @@ function HomePage() {
   return (
     <div>
       <h1>Read Books</h1>
-      <BooksTable books={books} onDelete={handleDelete} />
+      <BooksList books={books} onDelete={handleDelete} />
     </div>
   )
 }
