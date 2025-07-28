@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # from fastapi.responses import FileResponse
 # from fastapi.staticfiles import StaticFiles
 from db import create_db_and_tables
-from api import books_router
+from api import books_router, notes_router
 
 # import os
 
@@ -22,7 +22,8 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-app.include_router(books_router)
+app.include_router(books_router, tags=['books'])
+app.include_router(notes_router, tags=['notes'])
 # app.mount('/assets', StaticFiles(directory='dist/assets'), name='assets')
 
 @app.on_event('startup')
