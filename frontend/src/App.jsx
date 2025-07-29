@@ -3,6 +3,7 @@ import NavBar from './components/NavBar'
 import BooksTable from './components/BooksTable'
 import BookForm from './components/BookForm'
 import BooksList from './components/BooksList'
+import NotesList from './components/NotesList'
 import { API_BASE_URL } from './apiConfig'
 import { useEffect, useState } from 'react'
 import './App.css'
@@ -11,6 +12,8 @@ function HomePage() {
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedBookId, setSelectedBookId] = useState(null)
+  const [notes, setNotes] = useState([])
 
   const fetchBooks = () => {
     fetch(`${API_BASE_URL}/books`)
@@ -32,6 +35,22 @@ function HomePage() {
     fetchBooks()
   }, [])
 
+  useEffect(() => {
+    if (selectedBookId) {
+      fetch(`${API_BASE_URL}/notes/${selectedBookId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch book details')
+          return res.json()
+        })
+        .then((notes) => {
+          setNotes(notes || [])
+        })
+        .catch((err) => {
+          alert(err.message)
+        })
+    }
+  }, [selectedBookId])
+
   const handleDelete = (id) => {
     setBooks((prev) => prev.filter((book) => book.id !== id))
   }
@@ -41,8 +60,17 @@ function HomePage() {
 
   return (
     <div>
-      <h1>Read Books</h1>
-      <BooksList books={books} onDelete={handleDelete} />
+      <div style={{ width: '100%', marginBottom: '32px' }}>
+        <h1 style={{ textAlign: 'center', margin: 0 }}>Read Books</h1>
+      </div>
+      <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1 }}>
+          <BooksList books={books} onDelete={handleDelete} onSelectBook={setSelectedBookId} />
+        </div>
+        <div style={{ flex: 1, minWidth: '340px' }}>
+          {selectedBookId && <NotesList notes={notes} />}
+        </div>
+      </div>
     </div>
   )
 }

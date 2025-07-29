@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function BooksList({ books, onDelete }) {
+export default function BooksList({ books, onSelectBook }) {
     return (
         <div>
             <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -24,11 +24,10 @@ export default function BooksList({ books, onDelete }) {
                             outline: 'none',
                         }}
                         tabIndex={0}
-                        onClick={() => alert(`Livro: ${book.title}`)}
-                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') alert(`Livro: ${book.title}`); }}
+                        onClick={() => onSelectBook(book.id)}
+                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onSelectBook(book.id); }}
                     >
                         <span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{book.title}</span>
-                        <button onClick={e => { e.stopPropagation(); onDelete(book.id); }}>Delete</button>
                     </li>
                 ))}
             </ul>
